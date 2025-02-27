@@ -17,7 +17,9 @@ export function Input({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-full">
+    <div
+      className={`w-full ${(type === "date" || type === "time") && "max-w-[190.5px]"}`}
+    >
       {label && <p className="text-white text-sm font-bold mb-1">{label}</p>}
       <div className="w-full flex p-2 border border-[#3E3C41] rounded-md gap-2 h-12 items-center">
         {iconSrc && (
@@ -33,10 +35,10 @@ export function Input({
 
         {(type === "date" || type === "time") && (
           <div
-            className="w-full relative cursor-pointer"
+            className="relative cursor-pointer w-full h-full"
             onClick={() => inputRef.current?.showPicker()}
           >
-            <IoIosArrowDown color="white" className="absolute right-2" />
+            <IoIosArrowDown color="white" className="absolute right-2 top-2" />
           </div>
         )}
       </div>
