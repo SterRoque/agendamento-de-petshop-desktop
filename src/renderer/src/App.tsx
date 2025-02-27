@@ -4,8 +4,11 @@ import RegisterModal from "./components/RegisterModal";
 import { Card } from "./components/Card";
 import date from "./assets/icons/date.svg";
 import { Button } from "./components/Button";
+import { useState } from "react";
 
 function App(): JSX.Element {
+  const [isOpenRegisterModal, setIsOpenRegisterModal] =
+    useState<boolean>(false);
   return (
     <div className="h-screen bg-[#14151D] w-full flex justify-center relative">
       <div className="max-w-[711px] ">
@@ -21,10 +24,15 @@ function App(): JSX.Element {
         </div>
         <Card />
 
-        {/* <RegisterModal /> */}
+        <RegisterModal
+          isOpen={isOpenRegisterModal}
+          onClose={() => setIsOpenRegisterModal(false)}
+        />
       </div>
       <div className="absolute bottom-8 right-7">
-        <Button isBlur={true}>Novo Agendamento</Button>
+        <Button isBlur={true} onClick={() => setIsOpenRegisterModal(true)}>
+          Novo Agendamento
+        </Button>
       </div>
     </div>
   );
