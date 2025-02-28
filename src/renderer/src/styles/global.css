@@ -8,3 +8,7 @@
 .custom-date-input::-moz-calendar-picker-indicator {
   display: none;
 }
+
+body {
+  background-color: #14151d;
+}
