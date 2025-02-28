@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { ChangeEventHandler, useRef } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 
 type InputProps = {
@@ -6,6 +6,9 @@ type InputProps = {
   placeholder?: string;
   label?: string;
   type?: "text" | "date" | "time";
+  value?: string | number;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  name?: string;
 };
 
 export function Input({
@@ -13,6 +16,9 @@ export function Input({
   placeholder,
   label,
   type = "text",
+  value,
+  name,
+  onChange,
 }: InputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -26,6 +32,9 @@ export function Input({
           <img src={iconSrc} alt="icon" className={`w-[17px] h-[17px] -mt-1`} />
         )}
         <input
+          value={value}
+          onChange={onChange}
+          name={name}
           type={type}
           ref={inputRef}
           className={`focus:outline-none text-sm bg-transparent text-[#98959D] appearance-none custom-date-input ${(type === "date" || type === "time") && "cursor-pointer"}`}
