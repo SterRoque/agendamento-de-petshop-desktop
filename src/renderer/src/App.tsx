@@ -1,14 +1,17 @@
 import { Input } from "./components/Input";
-import user from "./assets/icons/user.svg";
 import RegisterModal from "./components/RegisterModal";
 import { Card } from "./components/Card";
 import date from "./assets/icons/date.svg";
 import { Button } from "./components/Button";
 import { useState } from "react";
+import { useGetAppointments } from "./hooks/useGetAppointments";
 
 function App(): JSX.Element {
   const [isOpenRegisterModal, setIsOpenRegisterModal] =
     useState<boolean>(false);
+
+  const { appointments } = useGetAppointments();
+
   return (
     <div className="h-screen bg-[#14151D] w-full flex justify-center relative">
       <div className="max-w-[711px] ">
@@ -22,14 +25,18 @@ function App(): JSX.Element {
           </div>
           <Input type="date" iconSrc={date} />
         </div>
-        <Card />
+        <div className="flex flex-col gap-3">
+          <Card period="morning" appointments={appointments.morning} />
+          <Card period="afternoon" appointments={appointments.afternoon} />
+          <Card period="night" appointments={appointments.night} />
+        </div>
 
         <RegisterModal
           isOpen={isOpenRegisterModal}
           onClose={() => setIsOpenRegisterModal(false)}
         />
       </div>
-      <div className="absolute bottom-8 right-7">
+      <div className="fixed bottom-8 right-7">
         <Button isBlur={true} onClick={() => setIsOpenRegisterModal(true)}>
           Novo Agendamento
         </Button>
