@@ -2,6 +2,8 @@ import { IAppointment } from "@renderer/interfaces/IAppointment";
 import { createAppointmentService } from "@renderer/services/create-appointment-service";
 import { convertInDateTime } from "@renderer/utils/convertInDateTime";
 import { useState } from "react";
+import { useGetAppointments } from "./useGetAppointments";
+import { useLoading } from "./useLoading";
 
 const formInitial: IAppointment = {
   tutor_name: "",
@@ -16,6 +18,9 @@ export function useCreateAppointment() {
   const [date, setDate] = useState<string>("");
   const [time, setTime] = useState<string>("");
 
+  const { getAppointments } = useGetAppointments();
+  const { startLoading, stopLoading } = useLoading();
+
   function handleChangeInput(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
@@ -28,14 +33,19 @@ export function useCreateAppointment() {
   }
 
   async function onSubmit() {
+    startLoading();
     try {
       await createAppointmentService({
         ...form,
         date: convertInDateTime(date, time),
       });
       setForm(formInitial);
+
+      getAppointments();
     } catch (error) {
       alert("erro");
+    } finally {
+      stopLoading();
     }
   }
 

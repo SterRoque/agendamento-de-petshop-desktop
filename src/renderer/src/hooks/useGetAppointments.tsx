@@ -1,8 +1,9 @@
 import { IAppointmentsByPeriod } from "@renderer/interfaces/IAppointment";
 import { getAppointmentsService } from "@renderer/services/get-appointments-service";
 import { convertAppointmentsByPeriod } from "@renderer/utils/convertAppointmentsByPeriod";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useLoading } from "./useLoading";
+import { AppointmentContext } from "@renderer/contexts/AppointmentContext";
 
 export const appointmentsInitial: IAppointmentsByPeriod = {
   morning: [],
@@ -11,39 +12,36 @@ export const appointmentsInitial: IAppointmentsByPeriod = {
 };
 
 export function useGetAppointments() {
-  const [appointments, setAppointments] =
-    useState<IAppointmentsByPeriod>(appointmentsInitial);
+  const { appointmentsByPeriod, setAppointmentsByPeriod } =
+    useContext(AppointmentContext);
 
   const { isLoading, startLoading, stopLoading } = useLoading();
 
   const getAppointments = useCallback(async () => {
-    if (!isLoading) {
-      setAppointments(appointmentsInitial);
+    setAppointmentsByPeriod(appointmentsInitial);
 
-      try {
-        startLoading();
+    try {
+      startLoading();
 
-        const { data } = await getAppointmentsService();
+      const { data } = await getAppointmentsService();
 
-        const appointmentsByPeriod = convertAppointmentsByPeriod(data);
-        setAppointments(appointmentsByPeriod);
-      } catch (error) {
-        alert("erro");
-      } finally {
-        stopLoading();
-      }
+      const appointmentsByPeriodConverted = convertAppointmentsByPeriod(data);
+      setAppointmentsByPeriod(appointmentsByPeriodConverted);
+    } catch (error) {
+      alert("erro");
+    } finally {
+      stopLoading();
     }
   }, []);
 
-  console.log({
-    appointments,
-  });
-
   useEffect(() => {
-    getAppointments();
+    if (!isLoading) {
+      getAppointments();
+    }
   }, []);
 
   return {
-    appointments,
+    appointmentsByPeriod,
+    getAppointments,
   };
 }
