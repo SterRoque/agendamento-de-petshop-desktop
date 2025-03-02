@@ -10,7 +10,7 @@ export function Home() {
   const [isOpenRegisterModal, setIsOpenRegisterModal] =
     useState<boolean>(false);
 
-  const { appointments } = useGetAppointments();
+  const { appointmentsByPeriod } = useGetAppointments();
 
   return (
     <div className="h-screen bg-[#14151D] w-full flex justify-center relative">
@@ -26,9 +26,12 @@ export function Home() {
           <Input type="date" iconSrc={date} />
         </div>
         <div className="flex flex-col gap-3">
-          <Card period="morning" appointments={appointments.morning} />
-          <Card period="afternoon" appointments={appointments.afternoon} />
-          <Card period="night" appointments={appointments.night} />
+          <Card period="morning" appointments={appointmentsByPeriod.morning} />
+          <Card
+            period="afternoon"
+            appointments={appointmentsByPeriod.afternoon}
+          />
+          <Card period="night" appointments={appointmentsByPeriod.night} />
         </div>
 
         <RegisterModal
