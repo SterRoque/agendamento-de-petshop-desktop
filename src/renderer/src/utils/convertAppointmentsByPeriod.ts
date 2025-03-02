@@ -1,4 +1,3 @@
-import { appointmentsInitial } from "@renderer/hooks/useGetAppointments";
 import {
   IAppointment,
   IAppointmentsByPeriod,
@@ -8,7 +7,11 @@ import { classifyTime } from "./classifyTime";
 export function convertAppointmentsByPeriod(
   appointments: IAppointment[]
 ): IAppointmentsByPeriod {
-  const result: IAppointmentsByPeriod = appointmentsInitial;
+  const result: IAppointmentsByPeriod = {
+    morning: [],
+    afternoon: [],
+    night: [],
+  };
 
   appointments.forEach((appointment) => {
     const period = classifyTime(appointment.date);
