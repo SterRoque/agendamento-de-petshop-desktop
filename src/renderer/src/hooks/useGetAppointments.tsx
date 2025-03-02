@@ -1,7 +1,8 @@
 import { IAppointmentsByPeriod } from "@renderer/interfaces/IAppointment";
 import { getAppointmentsService } from "@renderer/services/get-appointments-service";
 import { convertAppointmentsByPeriod } from "@renderer/utils/convertAppointmentsByPeriod";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useLoading } from "./useLoading";
 
 export const appointmentsInitial: IAppointmentsByPeriod = {
   morning: [],
@@ -13,16 +14,30 @@ export function useGetAppointments() {
   const [appointments, setAppointments] =
     useState<IAppointmentsByPeriod>(appointmentsInitial);
 
-  async function getAppointments() {
-    try {
-      const { data } = await getAppointmentsService();
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
-      const appointmentsByPeriod = convertAppointmentsByPeriod(data);
-      setAppointments(appointmentsByPeriod);
-    } catch (error) {
-      alert("erro");
+  const getAppointments = useCallback(async () => {
+    if (!isLoading) {
+      setAppointments(appointmentsInitial);
+
+      try {
+        startLoading();
+
+        const { data } = await getAppointmentsService();
+
+        const appointmentsByPeriod = convertAppointmentsByPeriod(data);
+        setAppointments(appointmentsByPeriod);
+      } catch (error) {
+        alert("erro");
+      } finally {
+        stopLoading();
+      }
     }
-  }
+  }, []);
+
+  console.log({
+    appointments,
+  });
 
   useEffect(() => {
     getAppointments();
