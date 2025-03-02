@@ -4,6 +4,7 @@ import morningIcon from "../assets/icons/morning.svg";
 import afternoonIcon from "../assets/icons/afternoon.svg";
 import nightIcon from "../assets/icons/night.svg";
 import { formatDate } from "@renderer/utils/formatHour";
+import { useDeleteAppointment } from "@renderer/hooks/useDeleteAppointment";
 
 type CardProps = {
   appointments: IAppointment[];
@@ -29,9 +30,10 @@ const periodsContent = {
 };
 
 export function Card({ appointments, period }: CardProps) {
+  const { deleteAppointment } = useDeleteAppointment();
   const currentPeriod = periodsContent[period];
 
-  console.log(appointments);
+  if (!appointments.length) return null;
 
   return (
     <div className="bg-[#23242C] w-full h-fit rounded-[10px] max-w-[711px]">
@@ -59,7 +61,12 @@ export function Card({ appointments, period }: CardProps) {
               / {appointment.tutor_name}
             </p>
             <p className="w-[220px]">{appointment.service_description}</p>
-            <p className="text-[#666666] cursor-pointer">Remover agendamento</p>
+            <p
+              className="text-[#666666] cursor-pointer"
+              onClick={() => deleteAppointment(appointment.id!)}
+            >
+              Remover agendamento
+            </p>
           </div>
         ))}
       </div>
